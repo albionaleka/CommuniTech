@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    {% if profile %}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1 class="text-center">{{ profile.user.username|capfirst }}'s profile</h1>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-header">Followers</div>
+
+                        <div class="card-body">
+                            {% for follower in profile.followed_by.all %}
+                                <p class="card-text">
+                                    <a href="{% url 'profile' follower.user.id %}">@{{ follower.user.username|lower }}</a>
+                                </p>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <br>
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-header">Following</div>
+
+                        <div class="card-body">
+                            {% for following in profile.follows.all %}
+                                <p class="card-text">
+                                    <a href="{% url 'profile' following.user.id %}">@{{ following.user.username|lower }}</a>
+                                </p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
