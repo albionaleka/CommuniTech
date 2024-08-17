@@ -6,11 +6,11 @@
     <br>
 
     {% if profiles %}
-        <div class="container row row-cols-1 row-cols-md-3 g-4 align-items-center">
+        <div class="container row row-cols-1 row-cols-md-3 g-4 align-items-center justify-content-center">
             {% for profile in profiles %}
                 <div class="col">
-                    <div class="card">
-                        <img src="{% static 'img/pfp.jpg' %}" class="card-img-top" alt="...">
+                    <div class="card align-items-center justify-content-center no-border">
+                        <img src="{% static 'img/pfp.jpg' %}" class="card-img-top img-fluid circle" alt="...">
 
                         <div class="card-body">
                             <h5 class="card-title">Name: {{ profile.user.username }}</h5>
@@ -20,7 +20,7 @@
                             <p class="card-text">
                                 <small class="text-body-secondary">Last modified: {{ profile.date_modified }}</small>
                             </p>
-                            <a href="{% url 'profile' profile.user.id %}" class="btn btn-info">Follow</a>
+                            <a href="{% url 'profile' profile.user.id %}" class="btn btn-info">Visit Profile</a>
                         </div>
                     </div>
                 </div>          

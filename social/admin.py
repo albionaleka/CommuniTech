@@ -1,11 +1,12 @@
 from django.contrib import admin
-from .models import Profile
+from .models import Profile, Tweet
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 
 # Unregister the original User admin
 admin.site.unregister(User)
 admin.site.unregister(Group)
+admin.site.register(Tweet)
 
 # Define your custom ProfileInline
 class ProfileInLine(admin.StackedInline):

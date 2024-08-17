@@ -1,5 +1,35 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Tweets!</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <h1 class="text-center">Tweets!</h1>
+                <br>
+
+                {% for tweet in tweets %}
+                    <div class="alert alert-dark" role="alert">
+                        {{ tweet.body }}<br>
+                        <small class="text-muted">
+                            By: {{ tweet.user|lower }} at: {{ tweet.created }}
+                        </small>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if form %}
+                <div class="col-md-4 justify-content-center align-items-center">
+                    <h2>New Post</h2>
+                    <br>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-info">Post</button>
+                    </form>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
 {% endblock %}

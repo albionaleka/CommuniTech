@@ -6,12 +6,24 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    <h1 class="text-center">{{ profile.user.username|capfirst }}'s profile</h1>
+                    <h1 class="text-center">{{ profile.user.username|capfirst }}'s Profile</h1>
+                    <br>
+
+                    {% if tweets %}
+                        {% for tweet in tweets %}
+                            <div class="alert alert-dark" role="alert">
+                                {{ tweet.body }}<br>
+                                <small class="text-muted">
+                                    By: {{ tweet.user|lower }} at: {{ tweet.created }}
+                                </small>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-4 justify-content-center align-items-center">
                     <div class="card" style="width: 18rem;">
-                        <div class="card-header">Followers</div>
+                        <div class="card-header text-bg-secondary">Followers</div>
 
                         <div class="card-body">
                             {% for follower in profile.followed_by.all %}
@@ -24,7 +36,7 @@
 
                     <br>
                     <div class="card" style="width: 18rem;">
-                        <div class="card-header">Following</div>
+                        <div class="card-header text-bg-secondary">Following</div>
 
                         <div class="card-body">
                             {% for following in profile.follows.all %}
@@ -34,6 +46,22 @@
                             {% endfor %}
                         </div>
                     </div>
+
+                    <br>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        {% if profile in user.profile.follows.all %}
+                            <button type="submit" class="btn btn-outline-danger" name="follow" value="unfollow">
+                                Unfollow
+                            </button>
+                        {% else %}
+                            <button type="submit" class="btn btn-outline-info" name="follow" value="follow">
+                                Follow
+                            </button>
+                        {% endif %}
+                    </form>
+                    <br>
                 </div>
             </div>
         </div>
