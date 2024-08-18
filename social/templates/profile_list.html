@@ -3,7 +3,7 @@
 
 {% block content %}
     <h1 class="text-center">PROFILES</h1>
-    <br>
+    <br><br>
 
     {% if profiles %}
         <div class="container row row-cols-1 row-cols-md-3 g-4 align-items-center justify-content-center">
@@ -13,7 +13,7 @@
                         <img src="{% static 'img/pfp.jpg' %}" class="card-img-top img-fluid circle" alt="...">
 
                         <div class="card-body">
-                            <h5 class="card-title">Name: {{ profile.user.username }}</h5>
+                            <h5 class="card-title">Name: {{ profile.user.username|capfirst }}</h5>
                             <p class="card-text">
                                 Username: <a href="{% url 'profile' profile.user.id %}">@{{ profile.user.username|lower }}</a>
                             </p>
