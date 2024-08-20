@@ -12,44 +12,76 @@
                     {% if tweets %}
                         {% for tweet in tweets %}
                             <div class="alert alert-dark" role="alert">
-                                {{ tweet.body }}<br>
-                                <small class="text-muted">
-                                    By: {{ tweet.user|lower }} at: {{ tweet.created }}
-                                </small>
+                                <div class="row">
+                                    <div class="col-2">
+                                        {% if tweet.user.profile.profile_picture %}
+                                            <img src="{{ tweet.user.profile.profile_picture.url }}" alt="{{ tweet.user.username }}" width="50" height="50" class="img-fluid rounded-circle">
+                                        {% else %}
+                                            <img src="{% static 'img/pfp.jpg' %}" alt="{{ tweet.user.username }}" width="50" height="50" class="img-fluid rounded-circle">
+                                        {% endif %}
+                                    </div>
+        
+                                    <div class="col-9">
+                                        {{ tweet.body }}<br>
+                                        <small class="text-muted">
+                                            By: {{ tweet.user|lower }} at: {{ tweet.created }} &#9733; Likes: {{ tweet.like_tracker }}
+                                        </small>
+                                    </div>
+        
+                                    <div class="col-1">
+                                        {% if user in tweet.likes.all %}
+                                            <a href="{% url 'likes' tweet.id %}" class="btn">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill text-danger" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                                                </svg>
+                                            </a>
+                                        {% else %}
+                                            <a href="{% url 'likes' tweet.id %}" class="btn">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart text-danger" viewBox="0 0 16 16">
+                                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                                                </svg>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
                         {% endfor %}
                     {% endif %}
                 </div>
 
-                <div class="col-md-4 justify-content-center align-items-center">
-                    <div class="container">
+                <div class="col-md-4 justify-content-center align-items-center mx-auto">
+                    <div class="container justify-content-center align-items-center mx-auto">
                         {% if profile.profile_picture %}
-                            <img src="{{ profile.profile_picture.url }}" class="card-img-top img-fluid circle" alt="..." style="width: 40%;">
+                            <img src="{{ profile.profile_picture.url }}" class="card-img-top img-fluid rounded-circle mx-auto d-block" alt="..." style="width: 40%;">
                         {% endif %}
                     </div>
 
                     <br>
-                    <div class="card" style="width: 18rem;">
+                    <div class="card mx-auto" style="width: 18rem;">
                         <div class="card-header text-bg-secondary">Followers</div>
 
                         <div class="card-body">
                             {% for follower in profile.followed_by.all %}
-                                <p class="card-text">
-                                    <a href="{% url 'profile' follower.user.id %}">@{{ follower.user.username|lower }}</a>
-                                </p>
+                                {% if follower.user.id != request.user.id %}
+                                    <p class="card-text">
+                                        <a href="{% url 'profile' follower.user.id %}">@{{ follower.user.username|lower }}</a>
+                                    </p>
+                                {% endif %}
                             {% endfor %}
                         </div>
                     </div>
 
                     <br>
-                    <div class="card" style="width: 18rem;">
+                    <div class="card mx-auto" style="width: 18rem;">
                         <div class="card-header text-bg-secondary">Following</div>
 
                         <div class="card-body">
                             {% for following in profile.follows.all %}
-                                <p class="card-text">
-                                    <a href="{% url 'profile' following.user.id %}">@{{ following.user.username|lower }}</a>
-                                </p>
+                                {% if following.user.id != request.user.id %}
+                                    <p class="card-text">
+                                        <a href="{% url 'profile' following.user.id %}">@{{ following.user.username|lower }}</a>
+                                    </p>
+                                {% endif %}
                             {% endfor %}
                         </div>
                     </div>

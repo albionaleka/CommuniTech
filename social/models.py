@@ -12,6 +12,11 @@ class Tweet(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
 
+    likes = models.ManyToManyField(User, related_name="tweet_like", blank=True)
+
+    def like_tracker(self):
+        return self.likes.count()
+
     def __str__(self):
         return (
             f"{self.body} "

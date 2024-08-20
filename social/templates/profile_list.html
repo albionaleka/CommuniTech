@@ -10,7 +10,11 @@
             {% for profile in profiles %}
                 <div class="col">
                     <div class="card align-items-center justify-content-center no-border">
-                        <img src="{% static 'img/pfp.jpg' %}" class="card-img-top img-fluid circle" alt="...">
+                        {% if profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}" class="card-img-top img-fluid circle" alt="{{ profile.user.username }}">
+                        {% else %}
+                            <img src="{% static 'img/pfp.jpg' %}" class="card-img-top img-fluid circle" alt="{{ profile.user.username }}">
+                        {% endif %}
 
                         <div class="card-body">
                             <h5 class="card-title">Name: {{ profile.user.username|capfirst }}</h5>
