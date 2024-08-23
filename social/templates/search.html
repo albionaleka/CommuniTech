@@ -1,14 +1,29 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
     <div class="container">
-        <div class="row">
-            <div class="col-md-8">
-                <h1 class="text-center">Tweets!</h1>
-                <br>
+        <h1 class="text-center">Search Posts</h1>
+        <br>
 
-                {% for tweet in tweets %}
+        <div class="col-md-6 offset-md-3 container">
+            <form method="POST" class="d-flex" role="search">
+                {% csrf_token %}
+                <input type="text" class="form-control me-2" name="search" placeholder="Search">
+
+                <button type="submit" class="btn btn-info">Search</button>
+            </form>
+        </div>
+        <br>
+
+        {% if search %}
+            <div class="offset-md-2">
+                <h6>You searched for: {{ search }}</h6>
+                <h5>Your search results:</h5>
+            </div>
+        {% if searched %}
+            <div class="col-md-8 offset-md-2 container">
+                {% for tweet in searched %}
                     <div class="alert alert-dark" role="alert">
                         <div class="row">
                             <div class="col-2">
@@ -29,21 +44,7 @@
                                 </small>
                             </div>
 
-                            <div class="col-2">
-                                {% if user in tweet.likes.all %}
-                                    <a href="{% url 'likes' tweet.id %}" class="btn">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill text-danger" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                                        </svg>
-                                    </a>
-                                {% else %}
-                                    <a href="{% url 'likes' tweet.id %}" class="btn">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart text-danger" viewBox="0 0 16 16">
-                                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-                                        </svg>
-                                    </a>
-                                {% endif %}
-
+                            <div class="col-2 text-center">
                                 <a href="{% url 'show' tweet.id %}" class="btn">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share text-info" viewBox="0 0 16 16">
                                         <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5m-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3"/>
@@ -54,20 +55,12 @@
                     </div>
                 {% endfor %}
             </div>
-
-            {% if form %}
-                <div class="col-md-4 justify-content-center align-items-center">
-                    <h2>New Post</h2>
-                    <br>
-
-                    <form method="POST">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="btn btn-info white" style="color: white;">Post</button>
-                    </form>
-                </div>
+        {% else %}
+            {% if searched == None %}
+            {% else %}
+                <h6>There are no posts containing {{ search }}. Please try again. </h6>
             {% endif %}
-
-        </div>
+        {% endif %}
+        {% endif %}
     </div>
 {% endblock %}

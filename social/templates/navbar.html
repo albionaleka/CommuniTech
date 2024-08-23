@@ -18,22 +18,49 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'profiles' %}">Profiles</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'profile' request.user.id %}">Profile</a>
-            </li>
+
+            <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="{% url 'search_users' %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Search
+                </a>
+                <ul class="dropdown-menu dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'search_users' %}">Search Users</a></li>
+                    <li><a class="dropdown-item" href="{% url 'search_posts' %}">Search Posts</a></li>
+                </ul>
+              </li>
+            </ul>
           {% endif %}
         </ul>
 
-        <form class="d-flex" role="search">
+        {% comment %} <form class="d-flex" role="search">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-info" type="submit">Search</button>
-        </form>
+        </form> {% endcomment %}
 
-        {% if user.is_authenticated %}
-          <a class="btn btn-outline-info" href="{% url 'logout' %}">Log out</a>
-        {% else %}
+        {% if not user.is_authenticated %}
           <a class="btn btn-outline-info" href="{% url 'login' %}">Login</a>
           <a class="btn btn-outline-info" href="{% url 'register' %}">Register</a>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+          <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="{% url 'profile' request.user.id %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {% if user.profile.profile_picture %}
+                  <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" width="30" height="30" class="d-inline-block align-text-top rounded-circle">
+                {% else %}
+                  <img src="{% static 'img/pfp.jpg' %}" alt="Profile Picture" width="30" height="30" class="d-inline-block align-text-top rounded-circle">
+                {% endif %}
+              </a>
+              <ul class="dropdown-menu dropdown-menu dropdown-menu-lg-end">
+                  <li><a class="dropdown-item" href="{% url 'profile' request.user.id %}">Profile</a></li>
+                  <li><a class="dropdown-item" href="{% url 'followers' request.user.id %}">Followers</a></li>
+                  <li><a class="dropdown-item" href="{% url 'following' request.user.id %}">Following</a></li>
+                  <li><a class="dropdown-item" href="{% url 'logout' %}">Log out</a></li>
+              </ul>
+            </li>
+          </ul>
         {% endif %}
       </div>
     </div>

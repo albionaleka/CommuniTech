@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center">Search Users</h1>
+        <br>
+
+        <div class="col-md-6 offset-md-3 container">
+            <form method="POST" class="d-flex" role="search">
+                {% csrf_token %}
+
+                <input type="text" class="form-control me-2" name="search" placeholder="Search">
+
+                <button type="submit" class="btn btn-info">
+                    Search
+                </button>
+            </form>
+        </div>
+        <br>
+
+        {% if search %}
+            <h6>You searched for: {{ search }}</h6>
+            <h5>Your search results:</h5>
+            <br>
+        {% endif %}
+
+        {% if searched %}
+            <div class="container row row-cols-1 row-cols-md-3 g-4 align-items-center justify-content-center">
+                {% for user in searched %}
+                    <div class="col">
+                        <div class="card align-items-center justify-content-center no-border">
+                            {% if user.profile.profile_picture %}
+                                <img src="{{ user.profile.profile_picture.url }}" class="card-img-top img-fluid circle" alt="{{ user.profile.user.username }}" style="width: 40%;">
+                            {% else %}
+                                <img src="{% static 'img/pfp.jpg' %}" class="card-img-top img-fluid circle" alt="{{ user.profile.user.username }}" style="width: 40%;">
+                            {% endif %}
+
+                            <div class="card-body">
+                                <h5 class="card-title">Name: {{ user.profile.user.username|capfirst }}</h5>
+                                <p class="card-text">
+                                    Username: <a href="{% url 'profile' user.profile.user.id %}">@{{ user.profile.user.username|lower }}</a>
+                                </p>
+                                <p class="card-text">
+                                    <small class="text-body-secondary">Last modified: {{ user.profile.date_modified }}</small>
+                                </p>
+                                <a href="{% url 'profile' user.profile.user.id %}" class="btn btn-info">Visit Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            {% if searched == None %}
+            {% else %}
+                <h6>There are no users containing {{ search }}. Please try again. </h6>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

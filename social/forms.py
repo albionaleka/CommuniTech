@@ -63,9 +63,33 @@ class SignUp(UserCreationForm):
         self.fields['password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
 
 
-class ProfilePic(forms.ModelForm):
+class ProfileInfo(forms.ModelForm):
     profile_picture = forms.ImageField(label="Profile Picture")
+    profile_bio = forms.CharField(required=False, label='', widget=forms.Textarea(attrs={
+        "class":"form-control",
+        "placeholder":"Profile bio"
+    }))
+
+    instagram = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={
+        "class":"form-control",
+        "placeholder":"Instagram"
+    }))
+
+    linkedin = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={
+        "class":"form-control",
+        "placeholder":"LinkedIn"
+    }))
+
+    facebook = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={
+        "class":"form-control",
+        "placeholder":"Facebook"
+    }))
+
+    homepage = forms.CharField(required=False, label='', widget=forms.TextInput(attrs={
+        "class":"form-control",
+        "placeholder":"Personal website"
+    }))
 
     class Meta:
         model = Profile
-        fields = ('profile_picture',)
+        fields = ('profile_picture', 'profile_bio', 'instagram', 'linkedin', 'facebook', 'homepage', )

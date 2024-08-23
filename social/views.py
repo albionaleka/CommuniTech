@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Profile, Tweet
 from django.contrib import messages
-from .forms import Post, SignUp, ProfilePic
+from .forms import Post, SignUp, ProfileInfo
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
@@ -34,6 +34,32 @@ def profile_list(request):
     else:
         messages.success(request, ('You must be logged in to view this page! Please login.'))
         return redirect('home')
+    
+
+def unfollow(request, pk):
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user_id=pk)
+        request.user.profile.follows.remove(profile)
+
+        request.user.profile.save()
+        messages.success(request, (f"Unfollowed { profile.user.username }."))
+        return redirect(request.META.get("HTTP_REFERER"))
+    else:
+        messages.success(request, ("You must be logged in to view this page."))
+        return redirect('home')
+    
+
+def follow(request, pk):
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user_id=pk)
+        request.user.profile.follows.add(profile)
+
+        request.user.profile.save()
+        messages.success(request, (f"Followed { profile.user.username } back."))
+        return redirect(request.META.get("HTTP_REFERER"))
+    else:
+        messages.success(request, ("You must be logged in to view this page."))
+        return redirect('home')
 
 
 def profile(request, pk):
@@ -51,6 +77,32 @@ def profile(request, pk):
 
             current_user.save()
         return render(request, 'profile.html', {"profile": profile, "tweets":tweets})
+    else:
+        messages.success(request, ('You must be logged in to view this page! Please login.'))
+        return redirect('home')
+    
+
+def followers(request, pk):
+    if request.user.is_authenticated:
+        if request.user.id == pk:
+            profiles = Profile.objects.get(user_id=pk)
+            return render(request, 'followers.html', {"profiles": profiles})
+        else:
+            messages.success(request, ("You don't have access to that page."))
+            return redirect('home')
+    else:
+        messages.success(request, ('You must be logged in to view this page! Please login.'))
+        return redirect('home')
+    
+
+def following(request, pk):
+    if request.user.is_authenticated:
+        if request.user.id == pk:
+            profiles = Profile.objects.get(user_id=pk)
+            return render(request, 'following.html', {"profiles": profiles})
+        else:
+            messages.success(request, ("You don't have access to that page."))
+            return redirect('home')
     else:
         messages.success(request, ('You must be logged in to view this page! Please login.'))
         return redirect('home')
@@ -86,9 +138,7 @@ def register_user(request):
             form.save()
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
-            # first_name = form.cleaned_data['first_name']
-            # last_name = form.cleaned_data['last_name']
-            # email = form.cleaned_data['email']
+            
             user = authenticate(username=username, password=password)
 
             login(request, user)
@@ -103,7 +153,7 @@ def update_user(request):
         current_user = User.objects.get(id=request.user.id)
         profile_user = Profile.objects.get(user_id=request.user.id)
         user_form = SignUp(request.POST or None, request.FILES or None, instance=current_user)
-        picture_form = ProfilePic(request.POST or None, request.FILES or None, instance=profile_user)
+        picture_form = ProfileInfo(request.POST or None, request.FILES or None, instance=profile_user)
 
         if user_form.is_valid() and picture_form.is_valid():
             user_form.save()
@@ -129,3 +179,65 @@ def likes(request, pk):
     else:
         messages.success(request, ("You have to be logged in to view this page."))
         return redirect('home')
+
+
+def show(request, pk):
+    tweet = get_object_or_404(Tweet, id=pk)
+    if tweet:
+        return render(request, "view.html", {"tweet":tweet})
+    else:
+        messages.success(request, ("Tweet doesn't exist."))
+        return redirect('home')
+
+
+def delete_tweet(request, pk):
+    if request.user.is_authenticated:
+        tweet = get_object_or_404(Tweet, id=pk)
+        if request.user.id == tweet.user.id:
+            tweet.delete()
+            messages.success(request, ("Tweet deleted."))
+            return redirect(request.META.get("HTTP_REFERER"))
+        else:
+            messages.success(request, ("You don't have that permission."))
+            return redirect('home')
+    else:
+        messages.success(request, ("Log in to continue."))
+        return redirect(request.META.get("HTTP_REFERER"))
+    
+
+def edit_tweet(request, pk):
+    if request.user.is_authenticated:
+        tweet = get_object_or_404(Tweet, id=pk)
+        if request.user.id == tweet.user.id:
+            form = Post(request.POST or None, request.FILES or None, instance=tweet)
+            if form.is_valid():
+                form.save()
+                messages.success(request, ("Tweet has been edited."))
+                return redirect('home')
+            return render(request, 'edit_tweet.html', {"form":form, "tweet":tweet})
+        else:
+            messages.success(request, ("You don't have that permission."))
+            return redirect('home')
+    else:
+        messages.success(request, ("Log in to continue."))
+        return redirect(request.META.get("HTTP_REFERER"))
+    
+
+def search_posts(request):
+    if request.method == "POST":
+        search = request.POST['search']
+        searched = Tweet.objects.filter(body__contains = search)
+
+        return render(request, 'search.html', {"search":search, "searched":searched})
+    else:
+        return render(request, 'search.html', {})
+    
+
+def search_users(request):
+    if request.method == "POST":
+        search = request.POST['search']
+        searched = User.objects.filter(username__contains = search)
+
+        return render(request, 'search_users.html', {"search":search, "searched":searched})
+    else:
+        return render(request, 'search_users.html', {})
