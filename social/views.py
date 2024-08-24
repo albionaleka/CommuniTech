@@ -67,16 +67,26 @@ def profile(request, pk):
         profile = Profile.objects.get(pk=pk)
         tweets = Tweet.objects.filter(user_id=pk).order_by("-created")
 
+        form = Post(request.POST or None)
+
         if request.method == "POST":
+            if form.is_valid():
+                tweet = form.save(commit=False)
+                tweet.user = request.user
+                tweet.save()
+
+                messages.success(request, ('Tweet has been posted successfully.'))
+                return redirect('home')
+
             current_user = request.user.profile
             action = request.POST['follow']
             if action == "unfollow":
                 current_user.follows.remove(profile)
             else:
                 current_user.follows.add(profile)
-
+            
             current_user.save()
-        return render(request, 'profile.html', {"profile": profile, "tweets":tweets})
+        return render(request, 'profile.html', {"profile": profile, "tweets":tweets, "form":form})
     else:
         messages.success(request, ('You must be logged in to view this page! Please login.'))
         return redirect('home')
@@ -116,10 +126,10 @@ def login_user(request):
 
         if user is not None:
             login(request, user)
-            messages.success(request, "You've been logged in successfully")
+            messages.success(request, "You've been logged in successfully.")
             return redirect('home')
         else:
-            messages.success(request, "There was an error logging you in :(")
+            messages.success(request, "There was an error logging you in.")
             return redirect('login')
     else:
         return render(request, 'login.html', {})

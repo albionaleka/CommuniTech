@@ -14,11 +14,17 @@ class Tweet(models.Model):
 
     likes = models.ManyToManyField(User, related_name="tweet_like", blank=True)
 
+    image = models.ImageField(upload_to='img/', blank=True, null=True)
+
+    title = models.CharField(max_length=50, null=False, blank=False, default="Post title")
+
     def like_tracker(self):
         return self.likes.count()
 
     def __str__(self):
         return (
+            f"{self.title}"
+            f"{self.image}"
             f"{self.body} "
             f"{self.user} "
             f"{self.created:%Y-%m-%d %H:%M}"

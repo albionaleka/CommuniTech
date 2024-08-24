@@ -12,7 +12,7 @@
 
                 <input type="text" class="form-control me-2" name="search" placeholder="Search">
 
-                <button type="submit" class="btn btn-info">
+                <button type="submit" class="btn btn-primary">
                     Search
                 </button>
             </form>
@@ -44,7 +44,7 @@
                                 <p class="card-text">
                                     <small class="text-body-secondary">Last modified: {{ user.profile.date_modified }}</small>
                                 </p>
-                                <a href="{% url 'profile' user.profile.user.id %}" class="btn btn-info">Visit Profile</a>
+                                <a href="{% url 'profile' user.profile.user.id %}" class="btn btn-primary">Visit Profile</a>
                             </div>
                         </div>
                     </div>

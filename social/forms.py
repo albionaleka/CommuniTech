@@ -4,14 +4,25 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 class Post(forms.ModelForm):
+    title = forms.CharField(required=True, widget=forms.widgets.TextInput(
+        attrs={
+            "placeholder": "Title",
+            "class": "form-control"
+        }
+    ), label = "")
+
+    image = forms.ImageField(label="Image", required=False)
+
     body = forms.CharField(required=True, 
         widget=forms.widgets.Textarea(
             attrs={
             "placeholder": "Share your thoughts.",
-            "class": "form-control"
+            "class": "form-control",
+            "rows": 2,
             }), 
-            label="", 
-        )
+        label="", 
+    )
+
 
     class Meta:
         model = Tweet

@@ -9,6 +9,21 @@
                     <h1 class="text-center">{{ profile.user.username|capfirst }}'s Profile</h1>
                     <br>
 
+                    {% if form %}
+                        <div class="justify-content-center align-items-center">
+                            <h3>New Post</h3>
+
+                            <form method="POST">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit" class="btn btn-primary">Post</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                    <br>
+
+                    <h2>Posts</h2>
+
                     {% if tweets %}
                         {% for tweet in tweets %}
                             <div class="alert alert-dark" role="alert">
@@ -21,7 +36,7 @@
                                         {% endif %}
                                     </div>
         
-                                    <div class="col-8">
+                                    <div class="col-8 align-items-center">
                                         {{ tweet.body }}<br>
                                         <small class="text-muted">
                                             By: {{ tweet.user|lower }} at: {{ tweet.created }} &nbsp;
@@ -79,6 +94,7 @@
                             <img src="{{ profile.profile_picture.url }}" class="card-img-top img-fluid rounded-circle mx-auto d-block" alt="..." style="width: 40%;">
                         {% endif %}
                     </div>
+                    <br>
                     
                     <div class="container justify-content-center align-items-center mx-auto text-center">
                         {% if profile.homepage %}
@@ -121,6 +137,13 @@
                         {% endif %}
                     </div>
 
+                    <div class="container justify-content-center align-items-center mx-auto text-center">
+                        {% if request.user.id == profile.user.id %}
+                            <a href="{% url 'update' %}" class="btn btn-primary">Edit profile</a>
+                        {% endif %}
+                    </div>
+                    <br>
+
                     <div class="card mx-auto" style="width: 18rem;">
                         <div class="card-header text-bg-secondary">Followers</div>
 
@@ -151,7 +174,7 @@
                             {% endfor %}
                             
                             {% if request.user.id == profile.user.id %}
-                                <a class="btn btn-outline-info" href="{% url 'followers' profile.user.id %}">View all...</a>
+                                <a class="btn btn-outline-primary" href="{% url 'followers' profile.user.id %}">View all...</a>
                             {% endif %}
                         </div>
                     </div>
@@ -178,7 +201,7 @@
                             {% endfor %}
                             
                             {% if request.user.id == profile.user.id %}
-                                <a class="btn btn-outline-info" href="{% url 'following' profile.user.id %}">View all...</a>
+                                <a class="btn btn-outline-primary" href="{% url 'following' profile.user.id %}">View all...</a>
                             {% endif %}
                         </div>
                     </div>
@@ -209,11 +232,6 @@
                             {% endif %}
                         {% endif %}
                     </form>
-                    <br>
-
-                    {% if request.user.id == profile.user.id %}
-                        <a href="{% url 'update' %}" class="btn btn-info">Edit profile</a>
-                    {% endif %}
                 </div>
             </div>
         </div>
