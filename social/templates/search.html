@@ -24,7 +24,7 @@
         {% if searched %}
             <div class="col-md-8 offset-md-2 container">
                 {% for tweet in searched %}
-                    <div class="alert alert-dark" role="alert">
+                    <div class="alert" role="alert">
                         <div class="row">
                             <div class="col-2">
                                 {% if tweet.user.profile.profile_picture %}
@@ -35,13 +35,32 @@
                             </div>
 
                             <div class="col-8">
-                                {{ tweet.body }}<br>
-                                <small class="text-muted">
-                                    By: {{ tweet.user|lower }} at: {{ tweet.created }} &nbsp;
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill text-danger" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                                    </svg> {{ tweet.like_tracker }}
-                                </small>
+                                <h5>{{tweet.title }}</h5>
+
+                                <p>{{ tweet.body }}</p>
+
+                                {% if tweet.image %}
+                                    <img src="{{ tweet.image.url }}" alt="{{ tweet.title }}" class="img-fluid rounded">
+
+                                    <p>
+                                        <br>
+                                        <small class="text-muted">
+                                            By: {{ tweet.user|lower }} at: {{ tweet.created }} &nbsp;
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill text-danger" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                                            </svg> {{ tweet.like_tracker }}
+                                        </small>
+                                    </p>
+                                {% else %}
+                                    <p>
+                                        <small class="text-muted">
+                                            By: {{ tweet.user|lower }} at: {{ tweet.created }} &nbsp;
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill text-danger" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                                            </svg> {{ tweet.like_tracker }}
+                                        </small>
+                                    </p>
+                                {% endif %}
                             </div>
 
                             <div class="col-2 text-center">

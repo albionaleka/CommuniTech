@@ -27,6 +27,7 @@ class Post(forms.ModelForm):
     class Meta:
         model = Tweet
         exclude = ("user", "likes",)
+        fields = ['title', 'image', 'body']
 
 
 class SignUp(UserCreationForm):

@@ -5,11 +5,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                <h1 class="text-center">Tweets!</h1>
+                <h1 class="text-center">Posts</h1>
                 <br>
 
                 {% for tweet in tweets %}
-                    <div class="alert alert-dark" role="alert">
+                    <div class="alert" role="alert">
                         <div class="row">
                             <div class="col-2">
                                 {% if tweet.user.profile.profile_picture %}
@@ -20,23 +20,32 @@
                             </div>
 
                             <div class="col-8">
-                                {% if tweet.title %}
-                                    <h5>{{tweet.title }}</h5>
-                                {% endif %}
+                                <h5>{{tweet.title }}</h5>
+
+                                <p>{{ tweet.body }}</p>
 
                                 {% if tweet.image %}
-                                    <img src="{{ tweet.image.url }}" alt="{{ tweet.title }}" width="50" height="50" class="img-fluid">
-                                {% endif %}
+                                    <img src="{{ tweet.image.url }}" alt="{{ tweet.title }}" class="img-fluid rounded">
 
-                                <p>
-                                    {{ tweet.body }}<br>
-                                    <small class="text-muted">
-                                        By: {{ tweet.user|lower }} at: {{ tweet.created }} &nbsp;
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill text-danger" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                                        </svg> {{ tweet.like_tracker }}
-                                    </small>
-                                </p>
+                                    <p>
+                                        <br>
+                                        <small class="text-muted">
+                                            By: {{ tweet.user|lower }} at: {{ tweet.created }} &nbsp;
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill text-danger" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                                            </svg> {{ tweet.like_tracker }}
+                                        </small>
+                                    </p>
+                                {% else %}
+                                    <p>
+                                        <small class="text-muted">
+                                            By: {{ tweet.user|lower }} at: {{ tweet.created }} &nbsp;
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill text-danger" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                                            </svg> {{ tweet.like_tracker }}
+                                        </small>
+                                    </p>
+                                {% endif %}
                             </div>
 
                             <div class="col-2">
@@ -70,11 +79,52 @@
                     <h2>New Post</h2>
                     <br>
 
-                    <form method="POST" enctype="multipart/form-data">
+                    {% comment %} <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.as_p }}
                         <button type="submit" class="btn btn-primary">Post</button>
-                    </form>
+                    </form> {% endcomment %}
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                    
+                        <div class="form-group">
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="text-secondary">
+                                    {% for error in form.title.errors %}
+                                        <p><small>{{ error }}</small></p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    
+                        <div class="form-group">
+                            <label for="{{ form.image.id_for_label }}">Image: </label>
+                            {{ form.image }}
+                            {% if form.image.errors %}
+                                <div class="text-secondary">
+                                    {% for error in form.image.errors %}
+                                        <p><small>{{ error }}</small></p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <br>
+                    
+                        <div class="form-group">
+                            {{ form.body }}
+                            {% if form.body.errors %}
+                                <div class="text-secondary">
+                                    {% for error in form.body.errors %}
+                                        <p><small>{{ error }}</small></p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>                    
                 </div>
             {% endif %}
 

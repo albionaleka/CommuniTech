@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 # Create your views here.
 def home(request):
     if request.user.is_authenticated:
-        form = Post(request.POST or None)
+        form = Post(request.POST or None, request.FILES)
         if request.method == "POST":
             if form.is_valid():
                 tweet = form.save(commit=False)
@@ -23,8 +23,9 @@ def home(request):
         tweets = Tweet.objects.all().order_by("-created")
         return render(request, 'home.html', {"tweets":tweets, "form":form})
     else:
+        form = Post()
         tweets = Tweet.objects.all().order_by("-created")
-        return render(request, 'home.html', {"tweets":tweets})
+        return render(request, 'home.html', {"tweets":tweets, "form":form})
 
 
 def profile_list(request):
@@ -67,7 +68,7 @@ def profile(request, pk):
         profile = Profile.objects.get(pk=pk)
         tweets = Tweet.objects.filter(user_id=pk).order_by("-created")
 
-        form = Post(request.POST or None)
+        form = Post(request.POST or None, request.FILES)
 
         if request.method == "POST":
             if form.is_valid():
@@ -236,7 +237,7 @@ def edit_tweet(request, pk):
 def search_posts(request):
     if request.method == "POST":
         search = request.POST['search']
-        searched = Tweet.objects.filter(body__contains = search)
+        searched = Tweet.objects.filter(body__contains = search).order_by("-created")
 
         return render(request, 'search.html', {"search":search, "searched":searched})
     else:
