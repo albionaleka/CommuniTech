@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Profile, Tweet
+from .models import Profile, Tweet, Comment
 from django.contrib import messages
-from .forms import Post, SignUp, ProfileInfo
+from .forms import Post, SignUp, ProfileInfo, CommentForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 def home(request):
     if request.user.is_authenticated:
         form = Post(request.POST or None, request.FILES)
+
         if request.method == "POST":
             if form.is_valid():
                 tweet = form.save(commit=False)
@@ -26,6 +27,21 @@ def home(request):
         form = Post()
         tweets = Tweet.objects.all().order_by("-created")
         return render(request, 'home.html', {"tweets":tweets, "form":form})
+    
+
+def comment(request):
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            tweet_id = request.POST.get('tweet_id')
+            comment.tweet = Tweet.objects.get(id=tweet_id)
+            comment.save()
+            
+            messages.success(request, 'Comment has been posted successfully.')
+            return redirect('home')
+    return redirect('home')
 
 
 def profile_list(request):

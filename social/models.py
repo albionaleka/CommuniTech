@@ -45,7 +45,8 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
-    
+
+
 # @receiver(post_save, sender=User)
 def createProfile(sender, instance, created, **kwargs):
     if created:
@@ -55,3 +56,13 @@ def createProfile(sender, instance, created, **kwargs):
         user_profile.follows.set([ instance.profile.id ])
 
 post_save.connect(createProfile, sender=User)
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    post = models.ForeignKey(Tweet, related_name="comments", on_delete=models.CASCADE)
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return {self.body}

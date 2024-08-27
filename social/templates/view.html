@@ -64,6 +64,21 @@
                 </div>
             </div>
 
+            {% if tweet.comments.exists %}
+                <div class="col-md-8">
+                    <div class="row">
+                        <h2>Comments</h2>
+
+                        {% for comment in tweet.comments.all %}
+                            <div class="comment">
+                                <p>{{ comment.body }}</p>
+                                <small>Commented by {{ comment.user.username }} on {{ comment.created }}</small>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
         </div>
     </div>
 {% endblock %}
