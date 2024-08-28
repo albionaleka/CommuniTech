@@ -64,27 +64,56 @@
                                 {% endif %}
 
                                 <a href="{% url 'show' tweet.id %}" class="btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share text-info" viewBox="0 0 16 16">
-                                        <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5m-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3"/>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle text-info" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
                                     </svg>
                                 </a>
                             </div>
                         </div>
 
                         <div class="offset-md-2">
-                                <form method="post" class="d-flex" action="{% url 'comment' %}">
+                            {% if tweet.comments.exists %}
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <hr>
+                                        {% for comment in tweet.comments.all|slice:2 %}
+                                            <div class="comment">
+                                                <small>
+                                                    {% if comment.user.profile.profile_picture %}
+                                                        <a href="{% url 'profile' comment.user.id %}" style="text-decoration:none;">
+                                                            <img src="{{ comment.user.profile.profile_picture.url }}" alt="{{ comment.user.username }}" width="30" height="30" class="img-fluid rounded-circle">
+                                                        </a>
+                                                    {% else %}
+                                                        <a href="{% url 'profile' comment.user.id %}" style="text-decoration:none;">
+                                                            <img src="{% static 'img/pfp.jpg' %}" alt="{{ tweet.user.username }}" width="30" height="30" class="img-fluid rounded-circle">
+                                                        </a>
+                                                    {% endif %}
+                                                </small>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                                {{ comment.body }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <small>
+                                                    <a href="{% url 'delete_comment' comment.id %}" class="btn">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                                        </svg>
+                                                    </a>
+                                                </small>
+                                            </div>
+                                        {% endfor %}
+
+                                        <a href="{% url 'show' tweet.id %}" class="text-secondary" style="text-decoration:none;">View all...</a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <br>
+
+                        <div class="offset-md-2">
+                                <form method="post" class="d-flex" action="{% url 'comment' tweet.id %}">
                                     {% csrf_token %}
                                 
-                                    <div class="form-group me-2">
-                                        {{ form.body }}
-                                        {% if form.body.errors %}
-                                            <div class="text-secondary">
-                                                {% for error in form.body.errors %}
-                                                    <p><small>{{ error }}</small></p>
-                                                {% endfor %}
-                                            </div>
-                                        {% endif %}
-                                    </div>
+                                    <input type="text" id="username" class="form-control" name="body" placeholder="Add a comment...">
 
                                     <input type="hidden" name="tweet_id" value="{{ tweet.id }}">
                                 
@@ -148,9 +177,8 @@
                                 </div>
                             {% endif %}
                         </div>
-                        <br>
                     
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Post</button>
                     </form>                    
                 </div>
             {% endif %}

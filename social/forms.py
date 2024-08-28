@@ -104,19 +104,3 @@ class ProfileInfo(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('profile_picture', 'profile_bio', 'instagram', 'linkedin', 'facebook', 'homepage', )
-
-
-class CommentForm(forms.ModelForm):
-    body = forms.CharField(required=True, 
-        widget=forms.widgets.Textarea(
-            attrs={
-            "placeholder": "Share your thoughts.",
-            "class": "form-control",
-            "rows": 1,
-            }), 
-        label="", 
-    )
-
-    class Meta:
-        model = Comment
-        fields = ['body',]

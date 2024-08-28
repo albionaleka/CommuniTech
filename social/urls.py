@@ -19,5 +19,6 @@ urlpatterns = [
     path('edit_tweet/<int:pk>', views.edit_tweet, name='edit_tweet'),
     path('search_posts', views.search_posts, name="search_posts"),
     path('search_users', views.search_users, name="search_users"),
-    path('comment/', views.comment, name='comment'),
+    path('comment/<int:pk>', views.comment, name='comment'),
+    path('delete_comment/<int:pk>', views.delete_comment, name='delete_comment'),
 ]

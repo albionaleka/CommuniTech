@@ -1,7 +1,7 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render, redirect, reverse
 from .models import Profile, Tweet, Comment
 from django.contrib import messages
-from .forms import Post, SignUp, ProfileInfo, CommentForm
+from .forms import Post, SignUp, ProfileInfo
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
@@ -20,28 +20,42 @@ def home(request):
 
                 messages.success(request, ('Tweet has been posted successfully.'))
                 return redirect('home')
-
+            
         tweets = Tweet.objects.all().order_by("-created")
+        
         return render(request, 'home.html', {"tweets":tweets, "form":form})
     else:
-        form = Post()
         tweets = Tweet.objects.all().order_by("-created")
-        return render(request, 'home.html', {"tweets":tweets, "form":form})
+        return render(request, 'home.html', {"tweets":tweets})
     
 
-def comment(request):
+def comment(request, pk):
     if request.method == "POST":
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.user = request.user
-            tweet_id = request.POST.get('tweet_id')
-            comment.tweet = Tweet.objects.get(id=tweet_id)
+        post = get_object_or_404(Tweet, id=pk)
+        comment_text = request.POST.get('body')
+        
+        if comment_text:
+            comment = Comment.objects.create(post=post, body=comment_text, user=request.user)
             comment.save()
-            
+
             messages.success(request, 'Comment has been posted successfully.')
             return redirect('home')
     return redirect('home')
+
+def delete_comment(request, pk):
+    if request.user.is_authenticated:
+        comment = get_object_or_404(Comment, id=pk)
+
+        if request.user.id == comment.user.id:
+            comment.delete()
+            messages.success(request, ("Comment deleted."))
+        else:
+            messages.success(request, ("You don't have that permission."))
+            
+        return redirect(request.META.get("HTTP_REFERER"), 'home')
+    else:
+        messages.success(request, ("Log in to continue."))
+        return redirect(request.META.get("HTTP_REFERER"))
 
 
 def profile_list(request):
@@ -157,6 +171,7 @@ def logout_user(request):
     messages.success(request, "You've been logged out. Sorry to see you go!")
     return redirect('home')
 
+
 def register_user(request):
     form = SignUp()
     if request.method == "POST":
@@ -210,8 +225,10 @@ def likes(request, pk):
 
 def show(request, pk):
     tweet = get_object_or_404(Tweet, id=pk)
+    comments = tweet.comments.all()
+
     if tweet:
-        return render(request, "view.html", {"tweet":tweet})
+        return render(request, "view.html", {"tweet":tweet, "comments":comments})
     else:
         messages.success(request, ("Tweet doesn't exist."))
         return redirect('home')
@@ -220,7 +237,7 @@ def show(request, pk):
 def delete_tweet(request, pk):
     if request.user.is_authenticated:
         tweet = get_object_or_404(Tweet, id=pk)
-        if request.user.id == tweet.user.id:
+        if request.user.id == tweet.user.id or request.user.id == comment.user.id:
             tweet.delete()
             messages.success(request, ("Tweet deleted."))
             return redirect(request.META.get("HTTP_REFERER"))
