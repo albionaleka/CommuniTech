@@ -45,8 +45,9 @@ def comment(request, pk):
 def delete_comment(request, pk):
     if request.user.is_authenticated:
         comment = get_object_or_404(Comment, id=pk)
+        tweet = comment.post
 
-        if request.user.id == comment.user.id:
+        if request.user.id == comment.user.id or request.user.id == tweet.user.id:
             comment.delete()
             messages.success(request, ("Comment deleted."))
         else:
@@ -97,6 +98,9 @@ def profile(request, pk):
     if request.user.is_authenticated:
         profile = Profile.objects.get(pk=pk)
         tweets = Tweet.objects.filter(user_id=pk).order_by("-created")
+        user = get_object_or_404(Profile, id=pk)
+        followers = user.followed_by.count()
+        following = user.follows.count()
 
         form = Post(request.POST or None, request.FILES)
 
@@ -117,7 +121,7 @@ def profile(request, pk):
                 current_user.follows.add(profile)
             
             current_user.save()
-        return render(request, 'profile.html', {"profile": profile, "tweets":tweets, "form":form})
+        return render(request, 'profile.html', {"profile": profile, "tweets":tweets, "form":form, "followers":followers, "following":following})
     else:
         messages.success(request, ('You must be logged in to view this page! Please login.'))
         return redirect('home')
@@ -237,10 +241,10 @@ def show(request, pk):
 def delete_tweet(request, pk):
     if request.user.is_authenticated:
         tweet = get_object_or_404(Tweet, id=pk)
-        if request.user.id == tweet.user.id or request.user.id == comment.user.id:
+        if request.user.id == comment.user.id:
             tweet.delete()
             messages.success(request, ("Tweet deleted."))
-            return redirect(request.META.get("HTTP_REFERER"))
+            return redirect('home')
         else:
             messages.success(request, ("You don't have that permission."))
             return redirect('home')

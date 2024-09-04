@@ -1,0 +1,81 @@
+.bw{
+    filter: grayscale(100%);
+}
+
+.circle{
+    border-radius: 100%;
+    width: 70%;
+}
+
+.no-border{
+    border: 0px;
+}
+
+.white{
+    color: white;
+}
+
+.box { 
+    background: rgb(0,0,0);
+    background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(103,70,252,1) 100%);
+    position:absolute; 
+    top:0px; 
+    right:0px; 
+    bottom:0px; 
+    left:0px; 
+}
+
+.button {
+    border-radius: 30px;
+    border-color: blueviolet;
+    background-color: blueviolet;
+    color: white;
+    padding: 10px 30px;
+    box-sizing: border-box;
+}
+
+.padding{
+    padding: 10px 0 0 0;
+    box-sizing: border-box;
+}
+
+.justify {
+    text-align: justify;
+}
+
+.left {
+    text-align: left;
+}
+
+#username-profile{
+    font-weight: bolder;
+    font-size: x-large;
+}
+
+.right{
+    text-align: right;
+}
+
+.profile-stats{
+    font-size: medium;
+}
+
+.no-decoration{
+    text-decoration: none;
+    color: black;
+}
+
+.no-border{
+    border: 0;
+    color: black;
+    font-weight: bold;
+}
+
+.button-link{
+    border-radius: 30px;
+    border-color: gray;
+    background-color: gray;
+    color: white;
+    padding: 10px 30px;
+    box-sizing: border-box;
+}

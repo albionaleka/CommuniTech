@@ -6,9 +6,129 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    <h1 class="text-center">{{ profile.user.username|capfirst }}'s Profile</h1>
+                    <div class="container">
+                        <span id="username-profile">{{profile.user.username|lower}}<span>
+                        
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>
+                            {% if profile.homepage %}
+                                <a href="{{ profile.homepage }}" class="btn" target="_blank">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+                                        <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
+                                        <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
+                                    </svg>
+                                </a>
+                            {% endif %}
+
+                            {% if profile.linkedin %}
+                                <a href="{{ profile.linkedin }}" class="btn" target="_blank">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
+                                        <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z"/>
+                                    </svg>
+                                </a>
+                            {% endif %}
+
+                            {% if profile.github %}
+                                <a href="{{ profile.github }}" class="btn" target="_blank">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+                                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
+                                    </svg>
+                                </a>
+                            {% endif %}
+                        </span>
+                        <br><br>
+
+                        <div class="container row">
+                            <div class="col">
+                                {% if profile.profile_picture %}
+                                    <img src="{{ profile.profile_picture.url }}" class="card-img-top img-fluid rounded-circle" alt="..." style="width: 50%;">
+                                {% else %}
+                                    <img src="{% static 'img/pfp.jpg' %}" alt="{{ tweet.user.username }}" class="card-img-top img-fluid rounded-circle" alt="..." style="width: 50%;">
+                                {% endif %}
+                            </div>
+
+                            <div class="col text-center align-items-center justify-content-center d-flex">
+                                <p class="profile-stats">{{tweets.count}} <br> Posts</p>
+                            </div>
+    
+                            <div class="col text-center align-items-center justify-content-center d-flex">
+                                {% if request.user.id == profile.user.id %}
+                                    <a href="{% url 'followers' profile.user.id %}" class="no-decoration">
+                                        <p class="profile-stats">{{followers}} <br> Followers </p>
+                                    </a>
+                                {% else %}
+                                    <p class="profile-stats">{{followers}} <br> Followers </p>
+                                {% endif %}
+                            </div>
+    
+                            <div class="col text-center align-items-center justify-content-center d-flex">
+                                {% if request.user.id == profile.user.id %}
+                                    <a href="{% url 'following' profile.user.id %}" class="no-decoration">
+                                        <p class="profile-stats">{{following}} <br> Following</p>
+                                    </a>
+                                {% else %}
+                                    <p class="profile-stats">{{following}} <br> Following</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    
+                    <div class="container">
+                        <div class="container">
+                            {% if profile.profile_bio %}
+                                <span style="align:justify;">{{ profile.profile_bio }}</span>
+                            {% else %}
+                                <span style="align:justify;">No bio yet...</span>
+                            {% endif %}
+                        </div>
+                    </div>
                     <br>
 
+                    <div class="container">
+                        {% if request.user.id == profile.user.id %}
+                            <a href="{% url 'update' %}" class="btn btn-secondary">Edit profile</a>
+                        {% endif %}
+
+                        <form method="POST">
+                            {% csrf_token %}
+                            {% if profile in user.profile.follows.all %}
+                                {% if request.user.id != profile.user.id %}
+                                    <button type="submit" class="btn btn-danger" name="follow" value="unfollow">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
+                                            <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+                                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708"/>
+                                        </svg>
+                                        Unfollow
+                                    </button>
+                                {% endif %}
+                            {% elif user.profile in profile.follows.all and profile not in user.profile.follows.all %}
+                                {% if request.user.id != profile.user.id %}
+                                    <button type="submit" class="btn btn-success" name="follow" value="follow">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
+                                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+                                            <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+                                        </svg>
+                                        Follow back
+                                    </button>
+                                {% endif %}
+                            {% else %}
+                                {% if request.user.id != profile.user.id %}
+                                    <button type="submit" class="btn btn-success" name="follow" value="follow">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
+                                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+                                            <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+                                        </svg>
+                                        Follow
+                                    </button>
+                                {% endif %}
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <br>
                     {% if profile.user.id == request.user.id %}
                         {% if form %}
                             <div class="justify-content-center align-items-center">
@@ -58,309 +178,36 @@
                         {% endif %}
                         <br><br>
                     {% endif %}
-
-                    {% if tweets %}
-                        <h2>Posts</h2>
-                        <br>
-
-                        {% for tweet in tweets %}
-                            <div class="alert" role="alert">
-                                <div class="row">
-                                    <div class="col-2">
-                                        {% if tweet.user.profile.profile_picture %}
-                                            <img src="{{ tweet.user.profile.profile_picture.url }}" alt="{{ tweet.user.username }}" width="50" height="50" class="img-fluid rounded-circle">
-                                        {% else %}
-                                            <img src="{% static 'img/pfp.jpg' %}" alt="{{ tweet.user.username }}" width="50" height="50" class="img-fluid rounded-circle">
-                                        {% endif %}
-                                    </div>
-        
-                                    <div class="col-8 align-items-center">
-                                        <h5>{{tweet.title }}</h5>
-
-                                        <p>{{ tweet.body }}</p>
-
-                                        {% if tweet.image %}
-                                            <img src="{{ tweet.image.url }}" alt="{{ tweet.title }}" class="img-fluid rounded">
-
-                                            <p>
-                                                <br>
-                                                <small class="text-muted">
-                                                    By: {{ tweet.user|lower }} at: {{ tweet.created }} &nbsp;
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill text-danger" viewBox="0 0 16 16">
-                                                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                                                    </svg> {{ tweet.like_tracker }}
-                                                </small>
-                                            </p>
-                                        {% else %}
-                                            <p>
-                                                <small class="text-muted">
-                                                    By: {{ tweet.user|lower }} at: {{ tweet.created }} &nbsp;
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill text-danger" viewBox="0 0 16 16">
-                                                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                                                    </svg> {{ tweet.like_tracker }}
-                                                </small>
-                                            </p>
-                                        {% endif %}
-                                    </div>
-        
-                                    <div class="col-2 text-center">
-                                        {% if user in tweet.likes.all %}
-                                            <a href="{% url 'likes' tweet.id %}" class="btn">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill text-danger" viewBox="0 0 16 16">
-                                                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                                                </svg>
-                                            </a>
-                                        {% else %}
-                                            <a href="{% url 'likes' tweet.id %}" class="btn">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart text-danger" viewBox="0 0 16 16">
-                                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-                                                </svg>
-                                            </a>
-                                        {% endif %}
-
-                                        <a href="{% url 'show' tweet.id %}" class="btn">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle text-info" viewBox="0 0 16 16">
-                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                                                <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-                                            </svg>
-                                        </a>
-
-                                        {% if profile.user.id == request.user.id %}
-                                            <a href="{% url 'delete_tweet' tweet.id %}" class="btn">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                                                </svg>
-                                            </a>
-
-                                            <a a href="{% url 'edit_tweet' tweet.id %}" class="btn">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                                                </svg>
-                                            </a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-
-                                <div class="row offset-md-2">
-                                    {% if tweet.comments.exists %}
-                                        <div class="col-md-8">
-                                            <div class="row">
-                                                <hr>
-                                                {% for comment in tweet.comments.all|slice:2 %}
-                                                    <div class="comment">
-                                                        <small>
-                                                            {% if comment.user.profile.profile_picture %}
-                                                                <a href="{% url 'profile' comment.user.id %}" style="text-decoration:none;">
-                                                                    <img src="{{ comment.user.profile.profile_picture.url }}" alt="{{ comment.user.username }}" width="30" height="30" class="img-fluid rounded-circle">
-                                                                </a>
-                                                            {% else %}
-                                                                <a href="{% url 'profile' comment.user.id %}" style="text-decoration:none;">
-                                                                    <img src="{% static 'img/pfp.jpg' %}" alt="{{ tweet.user.username }}" width="30" height="30" class="img-fluid rounded-circle">
-                                                                </a>
-                                                            {% endif %}
-                                                        </small>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        
-                                                        {{ comment.body }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                        <small>
-                                                            <a href="{% url 'delete_comment' comment.id %}" class="btn">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                                                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                                                                </svg>
-                                                            </a>
-                                                        </small>
-                                                    </div>
-                                                {% endfor %}
-        
-                                                <a href="{% url 'show' tweet.id %}" class="text-secondary" style="text-decoration:none;">View all...</a>
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <br>
-                                            <form method="post" class="d-flex" action="{% url 'comment' tweet.id %}">
-                                                {% csrf_token %}
-                                            
-                                                <input type="text" id="username" class="form-control" name="body" placeholder="Add a comment...">
-                            
-                                                <input type="hidden" name="tweet_id" value="{{ tweet.id }}">
-                                            
-                                                <button type="submit" class="btn">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-dots" viewBox="0 0 16 16">
-                                                        <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
-                                                        <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9 9 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.4 10.4 0 0 1-.524 2.318l-.003.011a11 11 0 0 1-.244.637c-.079.186.074.394.273.362a22 22 0 0 0 .693-.125m.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8 8 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a11 11 0 0 0 .398-2"/>
-                                                    </svg>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                <br>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-
-                <div class="col-md-4 justify-content-center align-items-center mx-auto">
-                    <div class="container justify-content-center align-items-center mx-auto">
-                        {% if profile.profile_picture %}
-                            <img src="{{ profile.profile_picture.url }}" class="card-img-top img-fluid rounded-circle mx-auto d-block" alt="..." style="width: 40%;">
-                        {% else %}
-                            <img src="{% static 'img/pfp.jpg' %}" alt="{{ tweet.user.username }}" class="card-img-top img-fluid rounded-circle mx-auto d-block" alt="..." style="width: 40%;">
-                        {% endif %}
-                    </div>
-                    <br>
-                    
-                    <div class="container justify-content-center align-items-center mx-auto text-center">
-                        {% if profile.homepage %}
-                            <a href="{{ profile.homepage }}" class="btn" target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
-                                    <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
-                                    <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
-                                </svg>
-                            </a>
-                        {% endif %}
-
-                        {% if profile.instagram %}
-                            <a href="{{ profile.instagram }}" class="btn" target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
-                                    <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
-                                </svg>
-                            </a>
-                        {% endif %}
-
-                        {% if profile.linkedin %}
-                            <a href="{{ profile.linkedin }}" class="btn" target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
-                                    <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z"/>
-                                </svg>
-                            </a>
-                        {% endif %}
-
-                        {% if profile.facebook %}
-                            <a href="{{ profile.facebook }}" class="btn" target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
-                                    <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
-                                </svg>
-                            </a>
-                        {% endif %}
-                    </div>
-
-                    <div class="container justify-content-center align-items-center mx-auto">
-                        {% if profile.profile_bio %}
-                            <p class="text-center" style="align: justify;">{{ profile.profile_bio }}</p>
-                        {% else %}
-                        <p class="text-center" style="align: justify;">No bio yet...</p>
-                        {% endif %}
-                    </div>
-
-                    <div class="container justify-content-center align-items-center mx-auto text-center">
-                        {% if request.user.id == profile.user.id %}
-                            <a href="{% url 'update' %}" class="btn btn-primary">Edit profile</a>
-                        {% endif %}
-                    </div>
-                    <br>
-
-                    <div class="card mx-auto" style="width: 18rem;">
-                        <div class="card-header text-bg-secondary">Followers</div>
-
-                        <div class="card-body">
-                            {% for follower in profile.followed_by.all|slice:4 %}
-                                {% if follower.user.id != profile.user.id %}
-                                    <p class="card-text">
-                                        <a href="{% url 'profile' follower.user.id %}">@{{ follower.user.username|lower }}</a>
-                                        {% if request.user.id == profile.user.id %}
-                                            {% if follower not in profile.follows.all %}
-                                                <a href="{% url 'follow' follower.user.id %}" class="btn">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
-                                                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
-                                                        <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                                                    </svg>
-                                                </a>
-                                            {% else %}
-                                                <a href="{% url 'unfollow' follower.user.id %}" class="btn">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
-                                                        <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                                                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708"/>
-                                                    </svg>
-                                                </a>
-                                            {% endif %}
-                                        {% endif %}
-                                    </p>
-                                {% endif %}
-                            {% endfor %}
-                            
-                            {% if request.user.id == profile.user.id %}
-                                <a class="btn btn-outline-primary" href="{% url 'followers' profile.user.id %}">View all...</a>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <br>
-                    <div class="card mx-auto" style="width: 18rem;">
-                        <div class="card-header text-bg-secondary">Following</div>
-
-                        <div class="card-body">
-                            {% for following in profile.follows.all|slice:4 %}
-                                {% if following.user.id != profile.user.id %}
-                                    <p class="card-text">
-                                        <a href="{% url 'profile' following.user.id %}">@{{ following.user.username|lower }}</a>
-                                        {% if request.user.id == profile.user.id %}
-                                            <a href="{% url 'unfollow' following.user.id %}" class="btn">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
-                                                    <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                                                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708"/>
-                                                </svg>
-                                            </a>
-                                        {% endif %}
-                                    </p>
-                                {% endif %}
-                            {% endfor %}
-                            
-                            {% if request.user.id == profile.user.id %}
-                                <a class="btn btn-outline-primary" href="{% url 'following' profile.user.id %}">View all...</a>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <br>
-
-                    <form method="POST">
-                        {% csrf_token %}
-                        {% if profile in user.profile.follows.all %}
-                            {% if request.user.id != profile.user.id %}
-                                <button type="submit" class="btn btn-outline-danger" name="follow" value="unfollow">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
-                                        <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708"/>
-                                    </svg>
-                                    Unfollow
-                                </button>
-                            {% endif %}
-                        {% elif user.profile in profile.follows.all and profile not in user.profile.follows.all %}
-                            {% if request.user.id != profile.user.id %}
-                                <button type="submit" class="btn btn-outline-success" name="follow" value="follow">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
-                                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
-                                        <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                                    </svg>
-                                    Follow back
-                                </button>
-                            {% endif %}
-                        {% else %}
-                            {% if request.user.id != profile.user.id %}
-                                <button type="submit" class="btn btn-outline-success" name="follow" value="follow">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
-                                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
-                                        <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                                    </svg>
-                                    Follow
-                                </button>
-                            {% endif %}
-                        {% endif %}
-                    </form>
                 </div>
             </div>
+
+            <hr><br>
+
+                {% if tweets %}
+                    <div class="container row row-cols-1 row-cols-sm-3 g-4">
+                        {% for tweet in tweets %}
+                            <div class="col">
+                                {% if tweet.image %}
+                                    <a href="{% url 'show' tweet.id %}">
+                                        <img src="{{ tweet.image.url }}" alt="{{ tweet.title }}" class="img-fluid rounded">
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'show' tweet.id %}">
+                                        <img src="{% static 'img/pfp.jpg' %}" alt="{{ tweet.title }}" class="img-fluid rounded">
+                                    </a>
+                                {%endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="container">
+                        {%if request.user.id == profile.user.id %}
+                            <h4 class="text-center">You haven't posted yet...</h4>
+                        {% else %}
+                            <h4 class="text-center">{{profile.user.username|lower}} hasn't posted yet...</h4>
+                        {% endif %}
+                    </div>
+                {% endif %}
         </div>
     {% endif %}
 {% endblock %}

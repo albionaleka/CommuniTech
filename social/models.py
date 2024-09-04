@@ -5,7 +5,7 @@ from django.db.models.signals import post_save
 # Create your models here.
 class Tweet(models.Model):
     user = models.ForeignKey(
-        User, related_name="tweets", on_delete=models.DO_NOTHING
+        User, related_name="tweets", on_delete=models.CASCADE
     )
 
     body = models.CharField(max_length=200)
@@ -38,9 +38,8 @@ class Profile(models.Model):
     profile_picture = models.ImageField(null=True, blank=True, upload_to='img/')
 
     profile_bio = models.CharField(blank=True, null=True, max_length=300)
-    facebook = models.CharField(blank=True, null=True, max_length=100)
     linkedin = models.CharField(blank=True, null=True, max_length=100)
-    instagram = models.CharField(blank=True, null=True, max_length=100)
+    github = models.CharField(blank=True, null=True, max_length=100)
     homepage = models.CharField(blank=True, null=True, max_length=100)
 
     def __str__(self):
@@ -65,4 +64,4 @@ class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return {self.body}
+        return self.body

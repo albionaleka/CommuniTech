@@ -10,21 +10,27 @@
             </span>
         </div>
     {% else %}
-        <div class="col-md-6 offset-md-3">
-            <h1 class="text-center">Login</h1>
+        <div class="box">
+            <div class="col-md-6 position-absolute top-50 start-50 translate-middle white">
+                <h1 class="text-center">Login</h1>
 
-            <form method="POST" action="{% url 'login' %}">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" id="username" class="form-control" name="username">
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password">
-                </div>
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form>
-        <div>
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" id="username" class="form-control" name="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <button type="submit" class="btn button">Login</button>
+                </form>
+
+                <br>
+                <span>Don't have an account?</span> &nbsp;&nbsp;
+                <a href="{% url 'register' %}" class="btn button-link">Register</a>
+            <div>
+        </div>
     {% endif %}
 {% endblock %}
