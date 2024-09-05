@@ -241,7 +241,7 @@ def show(request, pk):
 def delete_tweet(request, pk):
     if request.user.is_authenticated:
         tweet = get_object_or_404(Tweet, id=pk)
-        if request.user.id == comment.user.id:
+        if request.user.id == tweet.user.id:
             tweet.delete()
             messages.success(request, ("Tweet deleted."))
             return redirect('home')
