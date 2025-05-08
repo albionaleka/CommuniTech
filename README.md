@@ -1,6 +1,12 @@
 # Tech community Social Web App
-#### Video Demo:  https://youtu.be/UExJAcmtAKI
 #### Description:
-A social media web app inspired by Instagram and Twitter, specifically made for the Tech community to share their knowledge and help beginner developers.
-The app is built on Django as the backend, SQLite for the database and HTML & CSS for the UI. 
-It offers a bunch of features like: ```Authentication, Registering users, Posting, Commenting on Posts, Updating and Deleting posts etc.```
+A social media web app, inspired by Instagram and Twitter, is designed specifically for the tech community to share knowledge and support beginner developers. Built with Django for the backend and SQLite for the database, and utilizing HTML and CSS for the UI, the app offers a range of features:
+
+- ```Authentication```: Secure user registration and login with custom fields, including email, username, and password management.
+- ```Posting```: Users can create and share text, images, and code snippets related to tech topics.
+- ```Commenting```: Engage with posts through threaded comments, facilitating discussions and feedback.
+- ```Updating and Deleting Posts```: Users can update or delete their posts to keep content current.
+- ```User Profiles```: Personal profiles display users' posts and activity, fostering community interaction.
+- ```Responsive Design```: The app is optimized for various devices, ensuring a smooth user experience.
+
+This project has also been accepted by Harvard university, as a project for the well known CS50 Course.
